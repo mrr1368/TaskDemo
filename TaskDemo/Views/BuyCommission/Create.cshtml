@@ -1,0 +1,183 @@
+﻿@model BuyCommissionHeaderViewModel
+
+@{
+    ViewData["Title"] = "فرم کمیسیون خرید";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container my-5" dir="rtl">
+    <div class="row">
+        <div class="col-12 text-center mb-4">
+            <h2 class="fw-bold text-success">📄 فرم کمیسیون خرید</h2>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-11">
+            <form asp-action="Create"
+                  method="post"
+                  class="bg-white border p-4 rounded-4 shadow-lg needs-validation text-end"
+                  novalidate
+                  id="buyForm">
+
+                <!-- ✅ ولیدیشن کلی -->
+                <div asp-validation-summary="All"
+                     class="validation-summary-valid alert alert-danger"
+                     role="alert">
+                </div>
+
+                <fieldset class="border-bottom pb-3 mb-4">
+                    <legend class="fs-5 fw-semibold text-success">اطلاعات کلی</legend>
+
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <label asp-for="Date" class="form-label">تاریخ</label>
+                            <input asp-for="Date" class="form-control form-control-sm" />
+                        </div>
+                        <div class="col-md-3">
+                            <label asp-for="DocumentNumberYear" class="form-label">شماره سند</label>
+                            <input asp-for="DocumentNumberYear" class="form-control form-control-sm" />
+                        </div>
+                        <div class="col-md-3">
+                            <label asp-for="TotalQuantity" class="form-label">مقدار کل</label>
+                            <input asp-for="TotalQuantity" class="form-control form-control-sm" />
+                        </div>
+                        <div class="col-md-3">
+                            <label asp-for="RequiredDate" class="form-label">تاریخ مورد نیاز</label>
+                            <input asp-for="RequiredDate" class="form-control form-control-sm" />
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <label asp-for="Description" class="form-label">شرح درخواست</label>
+                        <input asp-for="Description" class="form-control form-control-sm" />
+                    </div>
+
+                    <div class="mt-2">
+                        <label asp-for="OptionAnalysis" class="form-label">تحلیل گزینه‌ها</label>
+                        <textarea asp-for="OptionAnalysis" class="form-control form-control-sm" rows="2"></textarea>
+                    </div>
+
+                    <div class="mt-2">
+                        <label asp-for="Notes" class="form-label">ملاحظات</label>
+                        <textarea asp-for="Notes" class="form-control form-control-sm" rows="2"></textarea>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend class="fs-5 fw-semibold text-success mb-3">لیست تأمین‌کنندگان</legend>
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped table-sm text-center align-middle" id="itemsTable">
+                            <thead class="table-success small">
+                                <tr>
+                                    <th>ردیف</th>
+                                    <th>فروشنده</th>
+                                    <th>مقدار</th>
+                                    <th>قیمت واحد</th>
+                                    <th>جمع کل</th>
+                                    <th>شرایط پرداخت</th>
+                                    <th>تولیدکننده</th>
+                                    <th>زمان تحویل</th>
+                                    <th>تاریخ خرید</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="itemsBody">
+                                <!-- JavaScript adds rows -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="text-end mt-2">
+                        <button type="button" class="btn btn-outline-success btn-sm rounded-pill px-3" onclick="addItemRow()">افزودن ردیف</button>
+                    </div>
+                </fieldset>
+
+                <!-- 🟩 دکمه ثبت -->
+                <button id="submitBtn" type="submit" class="btn btn-success w-100 py-2 fs-5 rounded-pill mt-4">
+                    <i class="bi bi-check-circle me-1"></i> ثبت کمیسیون خرید
+                </button>
+
+                <!-- 🔙 بازگشت -->
+                <div class="d-grid gap-2 mt-3">
+                    <a href="/buycommission-list" class="btn btn-outline-secondary w-100 py-2 fs-6 rounded-pill">
+                        <i class="bi bi-arrow-left-circle me-1"></i> بازگشت به لیست
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        let itemIndex = 0;
+
+        function addItemRow() {
+            const tbody = document.getElementById('itemsBody');
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${itemIndex + 1}</td>
+                <td><input name="Items[${itemIndex}].SellerName" class="form-control form-control-sm" /></td>
+                <td><input name="Items[${itemIndex}].Quantity" type="number" class="form-control form-control-sm" step="0.001" oninput="updateTotal(${itemIndex})" /></td>
+                <td><input name="Items[${itemIndex}].UnitPrice" type="number" class="form-control form-control-sm" step="0.0001" oninput="updateTotal(${itemIndex})" /></td>
+                <td><input name="Items[${itemIndex}].TotalPrice" readonly id="total-${itemIndex}" class="form-control form-control-sm bg-light" /></td>
+                <td><input name="Items[${itemIndex}].PaymentTerms" class="form-control form-control-sm" /></td>
+                <td><input name="Items[${itemIndex}].WarrantyOrManufacturer" class="form-control form-control-sm" /></td>
+                <td><input name="Items[${itemIndex}].DeliveryTime" class="form-control form-control-sm" /></td>
+                <td><input name="Items[${itemIndex}].LastPurchaseDate" class="form-control form-control-sm" /></td>
+                <td><button type="button" class="btn btn-sm btn-outline-danger" onclick="removeRow(this)">❌</button></td>
+            `;
+            tbody.appendChild(row);
+            itemIndex++;
+        }
+
+        function removeRow(btn) {
+            const row = btn.closest('tr');
+            row.remove();
+        }
+
+        function updateTotal(index) {
+            const qty = document.querySelector(`[name="Items[${index}].Quantity"]`).value || 0;
+            const price = document.querySelector(`[name="Items[${index}].UnitPrice"]`).value || 0;
+            const total = (parseFloat(qty) * parseFloat(price)).toFixed(0);
+            document.getElementById(`total-${index}`).value = isNaN(total) ? '' : total;
+        }
+
+        // 🛡️ اعتبارسنجی فرم قبل از ارسال
+        (function () {
+            'use strict';
+            const form = document.getElementById('buyForm');
+            const submitBtn = document.getElementById('submitBtn');
+
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    form.classList.add('was-validated');
+
+                    const inputs = form.querySelectorAll('input, select, textarea');
+                    inputs.forEach(function (input) {
+                        if (!input.checkValidity()) {
+                            input.classList.add('is-invalid');
+                            input.classList.remove('is-valid');
+                        } else {
+                            input.classList.remove('is-invalid');
+                            input.classList.add('is-valid');
+                        }
+                    });
+
+                } else {
+                    event.preventDefault();
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span> در حال ارسال...';
+                    setTimeout(() => form.submit(), 1000);
+                }
+            }, false);
+        })();
+
+        for (let i = 0; i < 3; i++) addItemRow();
+    </script>
+}

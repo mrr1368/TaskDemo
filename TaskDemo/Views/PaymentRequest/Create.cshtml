@@ -1,0 +1,160 @@
+﻿@model TaskDemo.ViewModel.CreatePaymentRequestViewModel
+
+<!-- 📦 کانتینر کلی فرم -->
+<div class="container my-5" dir="rtl">
+	<div class="row">
+		<div class="col-12">
+			<h2 class="text-center fw-bold mb-5 text-success">📝 فرم ثبت درخواست وجه / صدور چک</h2>
+		</div>
+	</div>
+
+	<div class="row justify-content-center">
+		<div class="col-12 col-md-10 col-lg-11">
+			<form asp-action="Create" method="post" class="bg-white border p-4 rounded-4 shadow-lg needs-validation text-end" novalidate id="paymentForm">
+
+				<!-- ✅ خلاصه خطاهای ولیدیشن -->
+				<div asp-validation-summary="All"
+					 class="validation-summary-valid alert alert-danger"
+					 role="alert">
+				</div>
+
+				<!-- 📅 تاریخ درخواست -->
+				<div class="mb-3 d-flex justify-content-end align-items-center gap-3 flex-wrap">
+					<label asp-for="RequestDate" class="form-label fw-semibold mb-0">تاریخ درخواست:</label>
+					<input asp-for="RequestDate" class="form-control shadow-sm w-auto" id="RequestDate" placeholder="مثال: 1403/03/15" style="min-width: 160px;" />
+				</div>
+
+				<!-- 🔢 شماره فرم -->
+				<div class="mb-3 d-flex justify-content-end align-items-center gap-3 flex-wrap">
+					<label asp-for="FormNumber" class="form-label fw-semibold mb-0">شماره فرم:</label>
+					<input asp-for="FormNumber" class="form-control shadow-sm w-auto" placeholder="مثال: 1245-F" style="min-width: 140px;" />
+				</div>
+
+				<hr class="my-4 border-top border-2 border-secondary-subtle" />
+
+				<!-- ✍️ متن درخواستی با ورودی‌های داخل متن -->
+				<p class="mb-4 lh-lg text-justify">
+					<span class="fw-semibold">مدیریت محترم</span><br />
+					<span>با سلام،</span><br />
+					<span class="fw-semibold">احتراماً دستور فرمایید تعداد</span>
+					<input asp-for="CheckCount" class="form-control d-inline-block shadow-sm text-center mx-1" value="@(Model?.CheckCount > 0 ? Model.CheckCount : 1)" placeholder="2" style="width: 50px; height: 32px; font-size: 0.95rem; padding: 2px 6px;" />
+					<span class="fw-semibold">فقره چک به مبلغ عددی</span>
+					<input asp-for="AmountNumeric" class="form-control d-inline-block shadow-sm text-center mx-1" value="@(Model?.AmountNumeric > 0 ? Model.AmountNumeric : 1000000)" placeholder="مثال: 2,500,000" style="width: 150px; height: 32px; font-size: 0.95rem; padding: 2px 6px;" />
+					<span class="fw-semibold">ریال، به تاریخ</span>
+					<input asp-for="CheckDate" id="CheckDate" class="form-control d-inline-block shadow-sm text-center mx-1" placeholder="مثال: 1403/04/12" style="width: 130px; height: 32px; font-size: 0.95rem; padding: 2px 6px;" />
+					<span class="fw-semibold">در وجه</span>
+					<input asp-for="RecipientName" class="form-control d-inline-block shadow-sm text-center mx-1" placeholder="مثال: علی رضایی" style="width: 180px; height: 32px; font-size: 0.95rem; padding: 2px 6px;" />
+					<span class="fw-semibold">با کد ملی / شناسه ملی</span>
+					<input asp-for="NationalCode" class="form-control d-inline-block shadow-sm text-center mx-1" placeholder="مثال: 0012345678" style="width: 180px; height: 32px; font-size: 0.95rem; padding: 2px 6px;" />
+					<span class="fw-semibold">بابت</span>
+					<input asp-for="PaymentReason" class="form-control d-inline-block shadow-sm text-center mx-1" placeholder="مثال: خرید تجهیزات اداری" style="width: 240px; height: 32px; font-size: 0.95rem; padding: 2px 6px;" />
+					<span class="fw-semibold">به شماره حساب</span>
+					<input asp-for="AccountNumber" class="form-control d-inline-block shadow-sm text-center mx-1" placeholder="مثال: 1234567890123456" style="width: 250px; height: 32px; font-size: 0.95rem; padding: 2px 6px;" />
+					<span class="fw-semibold">نزد بانک</span>
+					<input asp-for="BankAndBranch" class="form-control d-inline-block shadow-sm text-center mx-1" placeholder="مثال: ملت شعبه آزادی" style="width: 200px; height: 32px; font-size: 0.95rem; padding: 2px 6px;" />
+					<span class="fw-semibold">و شماره شبا</span>
+					<input asp-for="ShebaNumber" class="form-control d-inline-block shadow-sm text-center mx-1" placeholder="مثال: IRxxxxxxxxxxxxxxxxxxxxxx" style="width: 260px; height: 32px; font-size: 0.95rem; padding: 2px 6px;" />
+					<span class="fw-semibold">پرداخت نمایند.</span>
+				</p>
+
+				<hr class="my-4 border-top border-2 border-secondary-subtle" />
+
+				<!-- 👥 اطلاعات اقدام‌کننده و مدیر واحد -->
+				<div class="d-flex justify-content-between my-5">
+					<div class="text-end" style="width: 45%;">
+						<label asp-for="ActionBy" class="form-label fw-semibold d-block">اقدام‌کننده:</label>
+						<input asp-for="ActionBy" class="form-control shadow-sm" placeholder="مثال: رضا یوسفی" />
+					</div>
+					<div class="text-start" style="width: 45%;">
+						<label asp-for="UnitManager" class="form-label fw-semibold d-block">مدیر واحد:</label>
+						<input asp-for="UnitManager" class="form-control shadow-sm" placeholder="مثال: مهندس هاشمی" />
+					</div>
+				</div>
+
+				<!-- 💰 بررسی واحد مالی -->
+				<h6 class="fw-bold mb-4 text-end mb-0">بررسی واحد مالی:</h6>
+				<div class="border rounded-3 p-3 mt-1">
+					<div class="d-flex justify-content-between px-3 mt-1">
+						<div class="text-center">
+							<p class="mb-5">امضاء</p>
+							<p class="fw-semibold">مدیر مالی</p>
+							<input asp-for="AccountingManager" class="form-control text-center mt-2" placeholder="مثال: خانم پوراسماعیلی" style="width: 200px;" />
+						</div>
+						<div class="text-center">
+							<p class="mb-5">امضاء</p>
+							<p class="fw-semibold">رئیس حسابداری</p>
+							<input asp-for="ChiefAccountant" class="form-control text-center mt-2" placeholder="مثال: آقای رضوانی" style="width: 200px;" />
+						</div>
+					</div>
+				</div>
+
+				<hr class="my-4 border-top border-2 border-secondary-subtle" />
+
+				<!-- 👤 تایید مدیرعامل -->
+				<h6 class="fw-bold mb-0 text-end">تایید مدیرعامل:</h6>
+				<div class="border rounded-3 p-3 mt-3">
+					<div class="d-flex justify-content-center px-3 mt-3">
+						<div class="text-center">
+							<p class="mb-5">امضاء</p>
+							<p class="fw-semibold">مدیرعامل</p>
+							<input asp-for="CEOApproval" class="form-control text-center mt-2" placeholder="مثال: دکتر محمدی" style="width: 200px;" />
+						</div>
+					</div>
+				</div>
+
+				<!-- 🟩 دکمه ثبت -->
+				<button id="submitBtn" type="submit" class="btn btn-success w-100 py-2 fs-5 rounded-pill mt-4">
+					<i class="bi bi-check-circle me-1"></i> ثبت درخواست
+				</button>
+
+				<!-- 🔙 دکمه بازگشت -->
+				<div class="d-grid gap-2 mt-3">
+					<a href="/payment-list" class="btn btn-outline-secondary w-100 py-2 fs-6 rounded-pill">
+						<i class="bi bi-arrow-left-circle me-1"></i> بازگشت به لیست
+					</a>
+				</div>
+
+			</form>
+		</div>
+	</div>
+</div>
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+	<script>
+		// 🛡️ اعتبارسنجی فرم قبل از ارسال
+		(function () {
+			'use strict';
+			const form = document.getElementById('paymentForm');
+			const submitBtn = document.getElementById('submitBtn');
+
+			form.addEventListener('submit', function (event) {
+				if (!form.checkValidity()) {
+					event.preventDefault();
+					event.stopPropagation();
+					form.classList.add('was-validated');
+
+					// ❌ افزودن کلاس نامعتبر به فیلدهای نادرست
+					const inputs = form.querySelectorAll('input, select, textarea');
+					inputs.forEach(function (input) {
+						if (!input.checkValidity()) {
+							input.classList.add('is-invalid');
+							input.classList.remove('is-valid');
+						} else {
+							input.classList.remove('is-invalid');
+							input.classList.add('is-valid');
+						}
+					});
+
+				} else {
+					event.preventDefault();
+					submitBtn.disabled = true;
+					submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span> در حال ارسال...';
+					setTimeout(() => form.submit(), 1000);
+				}
+			}, false);
+		})();
+	</script>
+}

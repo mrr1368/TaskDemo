@@ -1,0 +1,65 @@
+﻿@model List<BuyCommissionHeaderViewModel>
+
+@{
+    ViewData["Title"] = "لیست کمیسیون‌های خرید";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container my-5" dir="rtl">
+    <div class="row">
+        <div class="col-12 text-center mb-4">
+            <h2 class="fw-bold text-success">📋 لیست کمیسیون‌های خرید</h2>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 text-end">
+            <a asp-action="Create" class="btn btn-success px-4 py-2 rounded-pill shadow-sm fw-bold">
+                <i class="bi bi-plus-circle me-2"></i> ثبت کمیسیون جدید
+            </a>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-11">
+            <div class="bg-white rounded-4 shadow-lg p-4 w-100 mx-auto" style="max-width: 1100px;">
+                @if (Model != null && Model.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover align-middle text-center">
+                            <thead class="table-success">
+                                <tr>
+                                    <th>تاریخ</th>
+                                    <th>شماره سند</th>
+                                    <th>شرح</th>
+                                    <th>مقدار کل</th>
+                                    <th>تاریخ مورد نیاز</th>
+                                    <th>ملاحظات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@item.Date</td>
+                                        <td>@item.DocumentNumberYear</td>
+                                        <td>@item.Description</td>
+                                        <td>@item.TotalQuantity</td>
+                                        <td>@item.RequiredDate</td>
+                                        <td>@item.Notes</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-warning text-center fs-5 rounded-3">
+                        <i class="bi bi-info-circle"></i> هیچ کمیسیونی ثبت نشده است.
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
